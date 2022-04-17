@@ -57,7 +57,7 @@ If you get the error "grub-install: error: cannot find EFI directory." then youâ
 
 Mount the EFI partition with
 ```sh
-$ mount /dev/yourpartition /boot/EFI/
+$ mount /dev/yourpartition /boot
 ```
 then
 ```sh
