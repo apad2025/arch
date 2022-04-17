@@ -37,3 +37,27 @@ Please note that we used the -U argument while generating the fstab. This is bec
 >If your machine has more than one SATA, SCSI or IDE disk controller, the order in which their corresponding device nodes are added is arbitrary. This may result in device names like /dev/sda and /dev/sdb switching around on each boot, culminating in an unbootable system, kernel panic, or a block device disappearing. Persistent naming solves these issues.
 
 -Sourced from The Arch Wiki
+
+## Chrooting
+Run
+```sh
+$ arch-chroot /mnt /bin/bash
+```
+
+## Bootloader
+Run
+```sh
+$ pacman -S networkmanager grub
+$ systemctl enable NetworkManager
+$ grub-install /dev/yourdisk
+```
+If you get the error "grub-install: error: cannot find EFI directory." then you’re in for a treat. 
+
+Mount the EFI partition with
+```sh
+$ mount /dev/yourpartition /boot/EFI/
+```
+then
+```sh
+$ pacman -S efibootmgr
+```
