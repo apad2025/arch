@@ -1,4 +1,6 @@
 # Instructions for installing Arch Linux
+## IMPORTANT!
+This guide assumes you are using UEFI to boot Arch. If you are using a legacy or BIOS system, find a different guide.
 ## Disk Partitioning and formatting
 Run
 ```sh
@@ -61,3 +63,101 @@ then
 ```sh
 $ pacman -S efibootmgr
 ```
+finally
+```sh
+$ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+```
+
+## Configuring Grub
+Run
+```sh
+$ vim /etc/default/grub
+```
+and uncomment GRUB_DISABLE_OS_PROBER=false
+then run
+```sh
+$ grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+## Setting Hostname and Password
+Run
+```sh
+$ passwd
+```
+Then enter and confirm a password of your choice
+then run
+```sh
+$ vim /etc/hostname
+```
+and set and save your hostname
+
+## Configuring Locale
+Run
+```sh
+$ vim /etc/locale.gen
+```
+Uncomment the languages you want, for this tutorial I will be uncommenting en_US.UTF-8 UTF-8 and en_US ISO-8859-1
+now run
+```sh
+$ locale-gen
+```
+finally, run
+```sh
+$ vim /etc/locale.conf
+```
+and type LANG=en-US.UTF-8 or whatever UTF you previously uncommented
+
+## Final steps
+Run
+```sh
+$ umount -R /mnt
+$ reboot
+```
+
+## Creating new user and sudo
+Run
+```sh
+$ useradd -m username
+$ passwd username
+$ pacman -S sudo
+$ EDITOR=vim visudo
+```
+
+In vim, type  
+```sh
+username ALL=(ALL:ALL) ALL
+```
+directly under the root ALL=(ALL:ALL) ALL line
+
+## Installing KDE deksop
+Run
+```sh
+$ pacman -S xorg plasma plasma-wayland-session kde-applications
+```
+then smash enter a bunch and wait a while
+after that's done run
+```sh
+$ systemctl enable sddm.service
+$ systemctl enable NetworkManager.service
+$ reboot
+```
+
+## Installing Chrome (because we know you don't want to use Firefox)
+Run
+```sh
+$ sudo pacman -S --needed base-devel git
+$ git clone https://aur.archlinux.org/yay-git.git
+$ cd yay-git/
+$ makepkg -si
+$ yay -S google-chrome
+```
+when you decide to update Chrome run
+```sh
+$ yay -Syu
+```
+
+## Disable mouse acceleration
+Go to settings, input devices, mouse, and set acceleration profile to flat
+
+# Finished
+Congratulations, you have now successfully installed Arch Linux! Pat yourself on the back, you've just accomplished a rewarding but time consuming achievement.
