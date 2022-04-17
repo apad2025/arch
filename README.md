@@ -34,7 +34,7 @@ Run
 ```sh
 $ genfstab -U /mnt >> /mnt/etc/fstab
 ```
-Please note that we used the -U argument while generating the fstab. This is because the argument uses the UUID of the disk and partition rather than /dev/sdx. The problem with using /dev/sdx is that it is not always a permanent label, while UUIDs do not change
+Please note that we used the -U argument while generating the fstab. This is because the argument uses the UUID of the disk of the partition rather than /dev/sdx. The problem with using /dev/sdx is that it is not always a permanent label, while UUIDs do not change
 
 >If your machine has more than one SATA, SCSI or IDE disk controller, the order in which their corresponding device nodes are added is arbitrary. This may result in device names like /dev/sda and /dev/sdb switching around on each boot, culminating in an unbootable system, kernel panic, or a block device disappearing. Persistent naming solves these issues.
 
