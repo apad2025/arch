@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)https://arch.apad.live/ -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Instructions for installing Arch Linux created by APAD | arch</title>
+<meta name="generator" content="Jekyll v3.9.0">
+<meta property="og:title" content="Instructions for installing Arch Linux created by APAD">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://arch.apad.live/">
+<meta property="og:url" content="http://arch.apad.live/">
+<meta property="og:site_name" content="arch">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Instructions for installing Arch Linux created by APAD">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","headline":"Instructions for installing Arch Linux created by APAD","name":"arch","url":"http://arch.apad.live/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <style class="anchorjs"></style><link rel="stylesheet" href="./original_files/style.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://arch.apad.live/">arch</a></h1>
+      
+
+      <h1 id="instructions-for-installing-arch-linux-created-by-apad">Instructions for installing Arch Linux created by APAD</h1>
+<h2 id="important">IMPORTANT!<a class="anchorjs-link " href="https://arch.apad.live/#important" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>This guide assumes you are using UEFI to boot Arch. If you are using a legacy or BIOS system, find a different guide.</p>
+<h2 id="disk-partitioning-and-formatting">Disk Partitioning and formatting<a class="anchorjs-link " href="https://arch.apad.live/#disk-partitioning-and-formatting" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>cfdisk /dev/yourdisk
+</code></pre></div></div>
+<p>Locate the partition of the disk on which you want to install Arch and delete it unless it says free space<br>
+Create a new 128M sized partition and select EFI System as its type<br>
+Finally, create a new partition from the remainder of the free space</p>
+
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mkfs.fat <span class="nt">-F</span> 32 /dev/yourEFI
+<span class="nv">$ </span>mkfs.ext4 /dev/root_partition
+</code></pre></div></div>
+
+<h2 id="mounting">Mounting<a class="anchorjs-link " href="https://arch.apad.live/#mounting" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mount /dev/root_partition /mnt
+<span class="nv">$ </span>mount <span class="nt">--mkdir</span> /dev/efi_system_partition /mnt/boot
+</code></pre></div></div>
+
+<h2 id="package-installation">Package Installation<a class="anchorjs-link " href="https://arch.apad.live/#package-installation" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pacstrap /mnt base base-devel linux linux-firmware vim
+</code></pre></div></div>
+
+<h2 id="configuring-fstab">Configuring Fstab<a class="anchorjs-link " href="https://arch.apad.live/#configuring-fstab" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>genfstab <span class="nt">-U</span> /mnt <span class="o">&gt;&gt;</span> /mnt/etc/fstab
+</code></pre></div></div>
+<p>Please note that we used the -U argument while generating the fstab. This is because the argument uses the UUID of the disk and partition rather than /dev/sdx. The problem with using /dev/sdx is that it is not always a permanent label, while UUIDs do not change</p>
+
+<blockquote>
+  <p>If your machine has more than one SATA, SCSI or IDE disk controller, the order in which their corresponding device nodes are added is arbitrary. This may result in device names like /dev/sda and /dev/sdb switching around on each boot, culminating in an unbootable system, kernel panic, or a block device disappearing. Persistent naming solves these issues.</p>
+</blockquote>
+
+<p>-Sourced from The Arch Wiki</p>
+
+<h2 id="chrooting">Chrooting<a class="anchorjs-link " href="https://arch.apad.live/#chrooting" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arch-chroot /mnt /bin/bash
+</code></pre></div></div>
+
+<h2 id="bootloader">Bootloader<a class="anchorjs-link " href="https://arch.apad.live/#bootloader" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pacman <span class="nt">-S</span> networkmanager grub
+<span class="nv">$ </span>systemctl <span class="nb">enable </span>NetworkManager
+<span class="nv">$ </span>grub-install /dev/yourdisk
+</code></pre></div></div>
+<p>If you get the error “grub-install: error: cannot find EFI directory.” then you’re in for a treat.</p>
+
+<p>Mount the EFI partition with</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mount /dev/yourpartition /boot
+</code></pre></div></div>
+<p>then</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pacman <span class="nt">-S</span> efibootmgr
+</code></pre></div></div>
+<p>finally</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>grub-install <span class="nt">--target</span><span class="o">=</span>x86_64-efi <span class="nt">--efi-directory</span><span class="o">=</span>/boot <span class="nt">--bootloader-id</span><span class="o">=</span>GRUB
+</code></pre></div></div>
+
+<h2 id="configuring-grub">Configuring Grub<a class="anchorjs-link " href="https://arch.apad.live/#configuring-grub" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim /etc/default/grub
+</code></pre></div></div>
+<p>and uncomment GRUB_DISABLE_OS_PROBER=false
+then run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h2 id="setting-hostname-and-password">Setting Hostname and Password<a class="anchorjs-link " href="https://arch.apad.live/#setting-hostname-and-password" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>passwd
+</code></pre></div></div>
+<p>Then enter and confirm a password of your choice
+then run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim /etc/hostname
+</code></pre></div></div>
+<p>and set and save your hostname</p>
+
+<h2 id="configuring-locale">Configuring Locale<a class="anchorjs-link " href="https://arch.apad.live/#configuring-locale" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim /etc/locale.gen
+</code></pre></div></div>
+<p>Uncomment the languages you want, for this tutorial I will be uncommenting en_US.UTF-8 UTF-8 and en_US ISO-8859-1
+now run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>locale-gen
+</code></pre></div></div>
+<p>finally, run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim /etc/locale.conf
+</code></pre></div></div>
+<p>and type LANG=en-US.UTF-8 or whatever UTF you previously uncommented</p>
+
+<h2 id="final-steps">Final steps<a class="anchorjs-link " href="https://arch.apad.live/#final-steps" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>umount <span class="nt">-R</span> /mnt
+<span class="nv">$ </span>reboot
+</code></pre></div></div>
+
+<h2 id="creating-new-user-and-sudo">Creating new user and sudo<a class="anchorjs-link " href="https://arch.apad.live/#creating-new-user-and-sudo" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>useradd <span class="nt">-m</span> username
+<span class="nv">$ </span>passwd username
+<span class="nv">$ </span>pacman <span class="nt">-S</span> <span class="nb">sudo</span>
+<span class="nv">$ EDITOR</span><span class="o">=</span>vim visudo
+</code></pre></div></div>
+
+<p>In vim, type</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username <span class="nv">ALL</span><span class="o">=(</span>ALL:ALL<span class="o">)</span> ALL
+</code></pre></div></div>
+<p>directly under the root ALL=(ALL:ALL) ALL line</p>
+
+<h2 id="installing-kde-deksop">Installing KDE deksop<a class="anchorjs-link " href="https://arch.apad.live/#installing-kde-deksop" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pacman <span class="nt">-S</span> xorg plasma plasma-wayland-session kde-applications
+</code></pre></div></div>
+<p>then smash enter a bunch and wait a while
+after that’s done run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>systemctl <span class="nb">enable </span>sddm.service
+<span class="nv">$ </span>systemctl <span class="nb">enable </span>NetworkManager.service
+<span class="nv">$ </span>reboot
+</code></pre></div></div>
+
+<h2 id="installing-chrome-because-we-know-you-dont-want-to-use-firefox">Installing Chrome (because we know you don’t want to use Firefox)<a class="anchorjs-link " href="https://arch.apad.live/#installing-chrome-because-we-know-you-dont-want-to-use-firefox" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>pacman <span class="nt">-S</span> <span class="nt">--needed</span> base-devel git
+<span class="nv">$ </span>git clone https://aur.archlinux.org/yay-git.git
+<span class="nv">$ </span><span class="nb">cd </span>yay-git/
+<span class="nv">$ </span>makepkg <span class="nt">-si</span>
+<span class="nv">$ </span>yay <span class="nt">-S</span> google-chrome
+</code></pre></div></div>
+<p>when you decide to update Chrome run</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yay <span class="nt">-Syu</span>
+</code></pre></div></div>
+
+<h2 id="disable-mouse-acceleration">Disable mouse acceleration<a class="anchorjs-link " href="https://arch.apad.live/#disable-mouse-acceleration" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<p>Go to settings, input devices, mouse, and set acceleration profile to flat</p>
+
+<h1 id="finished">Finished</h1>
+<p>Congratulations, you have now successfully installed Arch Linux! Pat yourself on the back, you’ve just accomplished a rewarding but time consuming achievement.</p>
+
+
+      
+    </div>
+    <script src="./original_files/anchor.min.js.download" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  
+
+</body></html>
