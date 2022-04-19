@@ -1,6 +1,7 @@
-# Instructions for installing Arch Linux created by APAD
+# Steps: 
 ## IMPORTANT!
 This guide assumes you are using UEFI to boot Arch. If you are using a legacy or BIOS system, find a different guide.
+
 ## Disk Partitioning and formatting
 Run
 ```sh
