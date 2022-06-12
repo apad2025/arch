@@ -311,9 +311,7 @@ hostname to “iusearch”</p>
 uncommenting en_US.UTF-8 UTF-8 and en_US ISO-8859-1 now run</p>
 <pre class="console"><code>[root@archiso /]# locale-gen</code></pre>
 <p>finally, run</p>
-<pre class="console"><code>[root@archiso /]# vim /etc/locale.conf</code></pre>
-<p>and type LANG=en-US.UTF-8 or whatever UTF you previously
-uncommented</p>
+<pre class="console"><code>[root@archiso /]# localectl set-locale LANG=en_US.UTF-8</code></pre>
 <h2 id="final-steps">Final steps</h2>
 <p>Run</p>
 <pre class="console"><code>[root@archiso /]# umount -R /mnt
